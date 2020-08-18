@@ -1,0 +1,77 @@
+<html>
+  <head>
+
+  <script src="/socket.io/socket.io.js"></script><script>
+  var my_room_id = '';
+  var socket = io();
+  socket.on("chat-msg", function(msg){ 
+    console.log(msg);
+  }); 
+  
+  socket.on('mouse-pos', function(data){
+  });
+  </script>
+  </head>
+  <body style="padding:0;margin:0;text-align:center;">
+    <div style="text-align:center;">
+      <h3>Online Pong</h3>
+    <div>
+      Join a room. 
+      <div id="roomID">Room ID: <input type="text" id="roomIDInput" onKeyPress="handleRoomId(event)"></div>
+      
+    </div>
+    <div id="link-container" style="display:none;">
+      Send this link to your friend: <span ><a id="link" target="_blank" href="#"></a></span>
+    </div>
+    <br/>
+    </div>
+    <script src="pixi.js"></script>
+    <script src="particlemanager.js"></script>
+    <script src="inputmanager.js"></script>
+    <script src="./renderer.js"></script>
+    <script src="./scenemanager.js"></script>
+    <script src="./engine.js"></script>
+    <script src="./script2.js"></script>
+    <script>
+
+      function randomString(n){
+        letters = "abcdefghijklmnopqrstuvwxyz";
+        str = "";
+
+        for(var i=0; i<n; i++){
+          str = str+letters.charAt(Math.floor(Math.random()*26));
+        }
+        return str;
+      }
+
+      function handleRoomId(e){
+        if(e.keyCode == 13){
+          var id = document.getElementById('roomIDInput').value;
+          if(id == my_room_id){
+            return;
+          }
+          my_room_id = id;
+          socket.emit("join_room", {id:id});
+          window.location.hash="#"+my_room_id;
+          document.getElementById("link").href=window.location.href;
+          document.getElementById("link").innerText=window.location.href;
+          document.getElementById("link-container").style.display="block";
+        }
+      }
+      if(window.location.hash){
+        my_room_id = window.location.hash.replace("#","");
+        socket.emit("join_room", {id:my_room_id});
+        window.location.hash="#"+my_room_id;
+
+      }else{
+        my_room_id = randomString(8);
+        socket.emit("join_room", {id:my_room_id});
+        window.location.hash="#"+my_room_id;
+      }
+      document.getElementById("link").href=window.location.href;
+      document.getElementById("link").innerText=window.location.href;
+      document.getElementById("link-container").style.display="block";      
+      document.getElementById("roomIDInput").value = my_room_id;
+    </script>
+  </body>
+</html>
