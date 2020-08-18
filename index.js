@@ -158,8 +158,14 @@ class GameState{
         this.paddle_1.velocity.y = up.paddle_1.velocity.y;
         this.ref_timestamp_p1 = up.paddle_1.update_timestamp;
 
+        //check that paddle stays in bounds of game.
+        if(this.paddle_1.position.y <=0){
+          this.paddle_1.position.y = 0;
+        }else if(this.paddle_1.position.y +30 >= 500){
+          this.paddle_1.position.y = 470;
+        }
+        
         server_update_timestamp+= dd;
-
         paddle_1_time_positions.push(
           {
             position: {
@@ -211,6 +217,13 @@ class GameState{
         this.paddle_2.position.y = this.paddle_2.position.y + this.paddle_2.velocity.y *(dd/1000);
         this.paddle_2.velocity.y = up.paddle_2.velocity.y;
         this.ref_timestamp_p2 = up.paddle_2.update_timestamp;
+
+        //check that paddle stays in bounds of game.
+        if(this.paddle_2.position.y <=0){
+          this.paddle_2.position.y = 0;
+        }else if(this.paddle_2.position.y +30 >= 500){
+          this.paddle_2.position.y = 470;
+        }
 
         server_update_timestamp+= dd;
         paddle_2_time_positions.push(
@@ -549,6 +562,6 @@ io.on('connection', (socket) => {
 });
 
 
-http.listen(process.env.PORT, () => {
-    console.log("listening on *:" +process.env.PORT);
-});
+http.listen(3000, () => {
+  console.log("listening on *:3000");
+})

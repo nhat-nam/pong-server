@@ -139,6 +139,13 @@ class PixiScene extends Scene{
     super.update(delta);
     var myPaddle = this.player.getPaddle();
 
+    // check that my Paddle stays in bounds of game. 
+    if(myPaddle.pos.y <=0){
+      myPaddle.pos.y=0;
+    }else if(myPaddle.pos.y+myPaddle.h >=HEIGHT){
+      myPaddle.pos.y = HEIGHT-myPaddle.h;
+    }
+
     if(myPaddle.pos.x <50){
       this.gui.renderable.text = this.player.score + "-"+this.onlinePlayer.score;
 
